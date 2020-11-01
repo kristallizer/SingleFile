@@ -33,7 +33,14 @@ const NETWORK_STATES = ["networkidle0", "networkidle2", "load", "domcontentloade
 let browser;
 
 exports.initialize = async options => {
-	browser = await puppeteer.launch(getBrowserOptions(options));
+	if (options.remoteWebsocketEndpoint) {
+		browser = await puppeteer.connect({
+			browserWSEndpoint: options.remoteWebsocketEndpoint
+		})
+	}
+	else {
+		browser = await puppeteer.launch(getBrowserOptions(options));
+	}
 };
 
 exports.getPageData = async options => {
